@@ -59,9 +59,7 @@ class PHP_Mail_Form
 
         try {
             //Server settings
-            //$mail->SMTPDebug = SMTP::DEBUG_SERVER; //Enable verbose debug output
             $mail->isSMTP(); //Send using SMTP
-            //$mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
             $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
             $mail->Username = 'palominos90@gmail.com'; //SMTP username
@@ -95,11 +93,6 @@ class PHP_Mail_Form
             if ($this->error) {
                 return $this->error;
             }
-            $headers = 'From: ' . $from_name . ' <' . $mailer . '>' . PHP_EOL;
-            $headers .= 'Reply-To: ' . $from_email . PHP_EOL;
-            $headers .= 'MIME-Version: 1.0' . PHP_EOL;
-            $headers .= 'Content-Type: ' . $this->content_type . '; charset=' . $this->charset . PHP_EOL;
-            $headers .= 'X-Mailer: PHP/' . phpversion() . ' with PHP_Mail_Form';
 
             //Recipients
             $mail->setFrom($from_email, $from_name);
@@ -108,7 +101,6 @@ class PHP_Mail_Form
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body = $message;
-            //$mail->addCustomHeader($headers);
             $mail->send();
 
             if (($mail->send()) === true) {
