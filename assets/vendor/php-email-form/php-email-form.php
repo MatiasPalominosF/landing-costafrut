@@ -62,8 +62,8 @@ class PHP_Mail_Form
             $mail->isSMTP(); //Send using SMTP
             $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
-            $mail->Username = 'palominos90@gmail.com'; //SMTP username
-            $mail->Password = 'zecjmjdqdqyvokff'; //SMTP password
+            $mail->Username = 'email@gmail.com'; //SMTP username
+            $mail->Password = '********'; //SMTP password
             $mail->SMTPSecure = 'ssl'; //Enable implicit TLS encryption
             $mail->Port = 465;
             //End server settings
