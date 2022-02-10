@@ -1,5 +1,12 @@
 <?php /** * PHP Mail Form * Version: 2.0 * Website: https://templatemag.com/php-mail-form/ * Copyright: TemplateMag.com */
 
+//Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+
+//Load Composer's autoloader
+require '../assets/vendor/autoload.php';
+
 class PHP_Mail_Form
 {
     public $to = false;
@@ -46,41 +53,73 @@ class PHP_Mail_Form
                 return $this->error_msg['ajax_error'];
             }
         }
-        $to = filter_var($this->to, FILTER_VALIDATE_EMAIL);
-        $from_name = filter_var($this->from_name, FILTER_SANITIZE_STRING);
-        $from_email = filter_var($this->from_email, FILTER_VALIDATE_EMAIL);
-        $subject = filter_var($this->subject, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $mailer = filter_var($this->mailer, FILTER_VALIDATE_EMAIL);
-        $message = nl2br($this->message);
 
-        if ($to === false && !empty($to)) {
-            $this->error .= $this->error_msg['invalid_to_email'] . '';
-        }
-        if ($from_name === false && !empty($from_name)) {
-            $this->error .= $this->error_msg['invalid_from_name'] . '';
-        }
-        if ($from_email === false && !empty($from_email)) {
-            $this->error .= $this->error_msg['invalid_from_email'] . '';
-        }
-        if ($subject === false && !empty($subject)) {
-            $this->error .= $this->error_msg['invalid_subject'] . '';
-        }
-        if ($mailer === false && !empty($mailer)) {
-            $this->error .= $this->error_msg['invalid_mailer'] . '';
-        }
-        if ($this->error) {
-            return $this->error;
-        }
-        $headers = 'From: ' . $from_name . ' <' . $mailer . '>' . PHP_EOL;
-        $headers .= 'Reply-To: ' . $from_email . PHP_EOL;
-        $headers .= 'MIME-Version: 1.0' . PHP_EOL;
-        $headers .= 'Content-Type: ' . $this->content_type . '; charset=' . $this->charset . PHP_EOL;
-        $headers .= 'X-Mailer: PHP/' . phpversion() . ' with PHP_Mail_Form';
-        $sendemail = mail($to, $subject, $message, $headers);
-        if ($sendemail) {
-            return 'OK';
-        } else {
-            return $this->error_msg['send_error'];
+        //Create an instance; passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER; //Enable verbose debug output
+            $mail->isSMTP(); //Send using SMTP
+            //$mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
+            $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
+            $mail->SMTPAuth = true; //Enable SMTP authentication
+            $mail->Username = 'palominos90@gmail.com'; //SMTP username
+            $mail->Password = 'zecjmjdqdqyvokff'; //SMTP password
+            $mail->SMTPSecure = 'ssl'; //Enable implicit TLS encryption
+            $mail->Port = 465;
+            //End server settings
+
+            $to = filter_var($this->to, FILTER_VALIDATE_EMAIL);
+            $from_name = filter_var($this->from_name, FILTER_SANITIZE_STRING);
+            $from_email = filter_var($this->from_email, FILTER_VALIDATE_EMAIL);
+            $subject = filter_var($this->subject, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mailer = filter_var($this->mailer, FILTER_VALIDATE_EMAIL);
+            $message = nl2br($this->message);
+
+            if ($to === false && !empty($to)) {
+                $this->error .= $this->error_msg['invalid_to_email'] . '';
+            }
+            if ($from_name === false && !empty($from_name)) {
+                $this->error .= $this->error_msg['invalid_from_name'] . '';
+            }
+            if ($from_email === false && !empty($from_email)) {
+                $this->error .= $this->error_msg['invalid_from_email'] . '';
+            }
+            if ($subject === false && !empty($subject)) {
+                $this->error .= $this->error_msg['invalid_subject'] . '';
+            }
+            if ($mailer === false && !empty($mailer)) {
+                $this->error .= $this->error_msg['invalid_mailer'] . '';
+            }
+            if ($this->error) {
+                return $this->error;
+            }
+            $headers = 'From: ' . $from_name . ' <' . $mailer . '>' . PHP_EOL;
+            $headers .= 'Reply-To: ' . $from_email . PHP_EOL;
+            $headers .= 'MIME-Version: 1.0' . PHP_EOL;
+            $headers .= 'Content-Type: ' . $this->content_type . '; charset=' . $this->charset . PHP_EOL;
+            $headers .= 'X-Mailer: PHP/' . phpversion() . ' with PHP_Mail_Form';
+
+            //Recipients
+            $mail->setFrom($from_email, $from_name);
+            $mail->addAddress($to, "SocialTalk");
+
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $message;
+            //$mail->addCustomHeader($headers);
+            $mail->send();
+
+            if (($mail->send()) === true) {
+                return 'OK';
+            } else {
+                return $this->error_msg['send_error'];
+            }
+        } catch (Exception $e) {
+            if ($e) {
+                return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
         }
     }
 }
