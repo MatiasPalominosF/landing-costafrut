@@ -18,6 +18,7 @@ class PHP_Mail_Form
     public $content_type = 'text/html';
     public $charset = 'UTF-8';
     public $ajax = false;
+
     public $error_msg = array(
         'invalid_to_email' =>
         'Email to: is empty or invalid!', 'invalid_from_name' =>
@@ -62,8 +63,8 @@ class PHP_Mail_Form
             $mail->isSMTP(); //Send using SMTP
             $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
-            $mail->Username = 'email@gmail.com'; //SMTP username
-            $mail->Password = '********'; //SMTP password
+            $mail->Username = 'palominos90@gmail.com'; //SMTP username
+            $mail->Password = 'zecjmjdqdqyvokff'; //SMTP password
             $mail->SMTPSecure = 'ssl'; //Enable implicit TLS encryption
             $mail->Port = 465;
             //End server settings
@@ -101,6 +102,7 @@ class PHP_Mail_Form
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body = $message;
+
             $mail->send();
 
             if (($mail->send()) === true) {
