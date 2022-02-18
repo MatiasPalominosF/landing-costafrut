@@ -37,6 +37,7 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   </head>
 
   <body>
@@ -475,12 +476,10 @@
             <div class="col-lg-6">
               <form
                 id="php_email_form_submit"
-                action="./forms/contact.php"
+                action="forms/contact.php"
                 method="post"
-                role="form"
                 class="php-email-form"
                 data-recaptcha-site-key="6Ld6d3IeAAAAAJJ4Dq8WSdpzowEP5RGWLcMQyA6w"
-                data-aos="fade-up"
               >
                 <div class="form-group">
                   <input
@@ -517,6 +516,7 @@
                     placeholder="Mensaje"
                     class="form-control"
                     name="message"
+                    id="message"
                     rows="5"
                     required
                   ></textarea>
@@ -530,7 +530,7 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="submit">Enviar</button>
+                  <button id="submitBtn" type="submit">Enviar</button>
                 </div>
               </form>
             </div>

@@ -51,7 +51,10 @@ class PHP_Mail_Form
     {
         if ($this->ajax) {
             if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
-                return $this->error_msg['ajax_error'];
+                echo json_encode(array(
+                    'error' => true,
+                    'message' => $this->error_msg['ajax_error'],
+                ));
             }
         }
 
@@ -92,7 +95,10 @@ class PHP_Mail_Form
                 $this->error .= $this->error_msg['invalid_mailer'] . '';
             }
             if ($this->error) {
-                return $this->error;
+                echo json_encode(array(
+                    'error' => true,
+                    'message' => $this->error,
+                ));
             }
 
             //Recipients
@@ -106,13 +112,22 @@ class PHP_Mail_Form
             $mail->send();
 
             if (($mail->send()) === true) {
-                return 'OK';
+                echo json_encode(array(
+                    'success' => true,
+                    'message' => 'Message sent successfully',
+                ));
             } else {
-                return $this->error_msg['send_error'];
+                echo json_encode(array(
+                    'error' => true,
+                    'message' => 'Error sending message',
+                ));
             }
         } catch (Exception $e) {
             if ($e) {
-                return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                echo json_encode(array(
+                    'error' => true,
+                    'message' => $mail->ErrorInfo,
+                ));
             }
         }
     }
